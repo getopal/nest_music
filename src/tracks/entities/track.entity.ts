@@ -1,25 +1,31 @@
-import {Column, DeleteDateColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
-import {Artist} from "../../artist/entities/artist.entity";
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    UpdateDateColumn,
+    DeleteDateColumn,
+} from 'typeorm';
 
+@Entity()
 export class Track {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
-    title: string
+    title: string;
+
+    @Column({ type: 'text' }) // Using TEXT for potentially large text content
+    text: string;
 
     @Column()
-    text: string
-
-    @Column()
-    cover: string
+    cover: string;
 
     @UpdateDateColumn()
-    updateAt: Date
+    updatedAt: Date;
 
     @DeleteDateColumn()
-    deleteAt?: Date
+    deletedAt?: Date;
 
-    @ManyToOne(type => Artist, (artist: Artist) => artist.name)
-    artist: Artist;
+    @Column()
+    artist: string;
 }

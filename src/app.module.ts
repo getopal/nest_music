@@ -8,6 +8,8 @@ import {ConfigModule, ConfigService} from "@nestjs/config";
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {UserEntity} from "./user/entities/user.entity";
 import { TracksModule } from './tracks/tracks.module';
+import { UploadModule } from './upload/upload.module';
+import {Track} from "./tracks/entities/track.entity";
 
 @Module({
   imports: [
@@ -26,11 +28,12 @@ import { TracksModule } from './tracks/tracks.module';
           database: configService.get('DB_NAME'),
           synchronize: true,
           autoLoadEntities: true,
-          entities: [UserEntity]
+          entities: [UserEntity, Track]
         }),
         inject: [ConfigService],
       }),
       TracksModule,
+      UploadModule,
   ],
 
   controllers: [AppController],
