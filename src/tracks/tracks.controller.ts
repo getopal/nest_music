@@ -11,6 +11,7 @@ import { TracksService } from './tracks.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { Track } from './entities/track.entity';
 import {ApiBody} from "@nestjs/swagger";
+import { log } from 'console';
 
 @Controller('tracks')
 export class TracksController {
@@ -19,6 +20,7 @@ export class TracksController {
   @Post()
   @ApiBody({ type: CreateTrackDto })
   create(@Body() createTrackDto: CreateTrackDto): Promise<Track> {
+     console.log(createTrackDto)
     return this.tracksService.create(createTrackDto);
   }
 

@@ -11,7 +11,9 @@ export class TracksService {
       private tracksRepository: Repository<Track>,
   ) {}
 
+
   async create(createTrackDto: CreateTrackDto): Promise<Track> {
+    console.log(createTrackDto)
     const track = this.tracksRepository.create(createTrackDto);
     return this.tracksRepository.save(track);
   }
