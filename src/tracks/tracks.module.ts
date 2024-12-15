@@ -3,11 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TracksService } from './tracks.service';
 import { TracksController } from './tracks.controller';
 import { Track } from './entities/track.entity';
+import { UserEntity } from '../user/entities/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Track])],
+  imports: [TypeOrmModule.forFeature([Track, UserEntity])],
   providers: [TracksService],
   controllers: [TracksController],
-  exports: [TracksService], //Export the service if needed by other modules
+  exports: [TracksService],
 })
 export class TracksModule {}

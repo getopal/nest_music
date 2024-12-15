@@ -16,9 +16,9 @@ import { audioStorage } from '../storage';
 export class UploadController {
   @Post()
   @UseInterceptors(
-      FileInterceptor('audio', {
-        storage: audioStorage
-      }),
+    FileInterceptor('audio', {
+      storage: audioStorage,
+    }),
   )
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -32,13 +32,15 @@ export class UploadController {
       },
     },
   })
-  async create(@UploadedFile() audio: Express.Multer.File, @Req() req: Request) {
+  async create(
+    @UploadedFile() audio: Express.Multer.File,
+    @Req() req: Request,
+  ) {
     if (!audio) {
       throw new BadRequestException('File upload failed');
     }
 
-    // Correct URL construction.  Replace with your actual URL logic.
-    const baseUrl = req.protocol + '://' + req.get('host'); // Get base URL from request
+    const baseUrl = req.protocol + '://' + req.get('host');
     const fileUrl = `${baseUrl}/uploads/audio/${audio.filename}`;
 
     return { url: fileUrl };

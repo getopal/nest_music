@@ -1,31 +1,41 @@
 import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    UpdateDateColumn,
-    DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  UpdateDateColumn,
+  DeleteDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
+import { UserEntity } from '../../user/entities/user.entity';
 
 @Entity()
 export class Track {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    title: string;
+  @Column()
+  title: string;
 
-    @Column({ type: 'text' }) // Using TEXT for potentially large text content
-    text: string;
+  @Column({ type: 'text' })
+  text: string;
 
-    @Column()
-    cover: string;
+  @Column()
+  audioUrl: string;
 
-    @UpdateDateColumn()
-    updatedAt: Date;
+  @UpdateDateColumn()
+  updatedAt: Date;
 
-    @DeleteDateColumn()
-    deletedAt?: Date;
+  @DeleteDateColumn()
+  deletedAt?: Date;
 
-    @Column()
-    artist: string;
+  @Column()
+  artist: string;
+
+  @ManyToOne(() => UserEntity, (user) => user.tracks)
+  @JoinColumn({ name: 'userId' })
+  user: UserEntity;
+
+  @Column()
+  userId: number;
 }

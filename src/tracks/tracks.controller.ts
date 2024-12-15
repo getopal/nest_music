@@ -10,8 +10,7 @@ import {
 import { TracksService } from './tracks.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { Track } from './entities/track.entity';
-import {ApiBody} from "@nestjs/swagger";
-import { log } from 'console';
+import { ApiBody } from '@nestjs/swagger';
 
 @Controller('tracks')
 export class TracksController {
@@ -20,14 +19,13 @@ export class TracksController {
   @Post()
   @ApiBody({ type: CreateTrackDto })
   create(@Body() createTrackDto: CreateTrackDto): Promise<Track> {
-     console.log(createTrackDto)
+    console.log(createTrackDto);
     return this.tracksService.create(createTrackDto);
   }
 
-
-  @Get()
-  findAll(): Promise<Track[]> {
-    return this.tracksService.findAll();
+  @Get(':userId')
+  findAllByUser(@Param('userId') userId: number): Promise<Track[]> {
+    return this.tracksService.findAllByUser(+userId);
   }
 
   @Get(':id')
@@ -37,8 +35,8 @@ export class TracksController {
 
   @Put(':id')
   update(
-      @Param('id') id: string,
-      @Body() updateTrackDto: CreateTrackDto,
+    @Param('id') id: string,
+    @Body() updateTrackDto: CreateTrackDto,
   ): Promise<Track> {
     return this.tracksService.update(+id, updateTrackDto);
   }

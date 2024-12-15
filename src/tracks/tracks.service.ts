@@ -3,36 +3,60 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Track } from './entities/track.entity';
 import { CreateTrackDto } from './dto/create-track.dto';
+import { UserEntity } from '../user/entities/user.entity';
 
 @Injectable()
 export class TracksService {
   constructor(
-      @InjectRepository(Track)
-      private tracksRepository: Repository<Track>,
+    @InjectRepository(Track)
+    private tracksRepository: Repository<Track>,
+    @InjectRepository(UserEntity)
+    private userRepository: Repository<UserEntity>,
   ) {}
 
-
   async create(createTrackDto: CreateTrackDto): Promise<Track> {
-    console.log(createTrackDto)
-    const track = this.tracksRepository.create(createTrackDto);
+    const user = await this.userRepository.findOneBy({
+      id: createTrackDto.userId,
+    });
+    if (!user) {
+      throw new NotFoundException(
+        `User with ID ${createTrackDto.userId} not found`,
+      );
+    }
+
+    const track = this.tracksRepository.create({ ...createTrackDto, user });
     return this.tracksRepository.save(track);
   }
 
-  async findAll(): Promise<Track[]> {
-    return this.tracksRepository.find({ where: { deletedAt: null } });
+  async findAllByUser(userId: number): Promise<Track[]> {
+    return this.tracksRepository.find({
+      where: { userId, deletedAt: null },
+      relations: ['user'],
+    });
   }
 
   async findOne(id: number): Promise<Track> {
-    const track = await this.tracksRepository.findOneBy({ id, deletedAt: null });
+    const track = await this.tracksRepository.findOne({
+      where: { id, deletedAt: null },
+      relations: ['user'],
+    });
     if (!track) {
       throw new NotFoundException(`Track with ID ${id} not found`);
     }
     return track;
   }
 
-  async update(id: number, updateTrackDto: CreateTrackDto): Promise<Track> { //Using CreateTrackDto for simplicity, but a dedicated UpdateTrackDto would be better
+  async update(id: number, updateTrackDto: CreateTrackDto): Promise<Track> {
     const track = await this.findOne(id);
-    Object.assign(track, updateTrackDto); //Potentially unsafe in production, use specific fields instead
+    const user = await this.userRepository.findOneBy({
+      id: updateTrackDto.userId,
+    });
+    if (!user) {
+      throw new NotFoundException(
+        `User with ID ${updateTrackDto.userId} not found`,
+      );
+    }
+    Object.assign(track, updateTrackDto, { user });
     return this.tracksRepository.save(track);
   }
 
