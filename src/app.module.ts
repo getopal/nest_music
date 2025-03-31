@@ -10,6 +10,7 @@ import { UserEntity } from './user/entities/user.entity';
 import { TracksModule } from './tracks/tracks.module';
 import { UploadModule } from './upload/upload.module';
 import { Track } from './tracks/entities/track.entity';
+import { PlaylistsModule } from './playlists/playlists.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { Track } from './tracks/entities/track.entity';
     }),
     TracksModule,
     UploadModule,
+    PlaylistsModule,
   ],
 
   controllers: [AppController],
